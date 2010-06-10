@@ -1,0 +1,31 @@
+#/bin/bash
+# jpack - Pack Joomla! Extensions with ease
+# Copyright (c) 2010, Ryder Ross <ryross@gmail.com>
+#
+
+phperror=0;
+files=`find $1 -name \*.php`
+for i in $files; do
+  result=`php -l $i`
+  if [ $? -ne 0 ]
+  then
+    echo $result
+    phperror=1  
+  fi
+done
+
+if [ $phperror -eq 0 ]
+then
+
+  if [ -f $1.zip ]
+  then
+     rm $1.zip
+  fi
+
+  myfp=`which $0`
+  mydir=`dirname $myfp`
+
+  zip -ll -r $1.zip $1 -x@$mydir/exclude.lst
+
+fi
+
